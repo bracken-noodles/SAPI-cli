@@ -1,6 +1,6 @@
 {
   "name": "@decobim/sapi",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "main": "index.js",
   "repository": "git@gitlab.decobim.com:ops-boilerplates/sapi-cli.git",
   "author": "Oboo Chin <oboochin@gmail.com>",
