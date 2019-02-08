@@ -3,6 +3,13 @@
 const http = require("http");
 const fs = require("fs");
 const path = require("path");
+const projectRoot = process.cwd();
+const Ajv = new require("ajv");
+const ajv = new Ajv();
+
+const opsConfigJsonSchemaValidatorv = require("./configJsonSchema.json");
+
+var validate = ajv.compile(opsConfigJsonSchemaValidatorv);
 
 const enterprisePrefix = `/enterprises/{enterpriseId}`;
 const projectPrefix = enterprisePrefix + `/projects/{projectId}`;
@@ -16,10 +23,22 @@ let fileStr = `/*
 import send from "@dc/request"
 `;
 
-const configFilePath = path.resolve(__dirname, "./ops.config.js");
+const configFilePath = path.resolve(projectRoot, "./ops.config.js");
 
-if (fs.existsSync(path)) {
-  const configs = require(configFilePath).swagger;
+if (fs.existsSync(configFilePath)) {
+  const swagger = require(configFilePath).swagger;
+  const valid = validate(swagger);
+
+  if (!valid) {
+    console.error("ops.config.js swagger field config schema wrong. errors:");
+    console.error(
+      validate.errors
+        .map((err, index) => index + 1 + ". " + err.message)
+        .join("\n  ")
+    );
+    return;
+  }
+  const configs = swagger.proxy;
 
   let count = 0;
 
@@ -27,7 +46,7 @@ if (fs.existsSync(path)) {
     parser(config).then(_ => {
       count += 1;
       if (count === configs.length) {
-        fs.writeFileSync(configs.dist, fileStr, "utf8");
+        fs.writeFileSync(swagger.dist, fileStr, "utf8");
       }
     });
   });
