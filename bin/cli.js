@@ -26,7 +26,7 @@ if (!configFilePath) {
   process.exit(1);
 }
 
-const configs = require().swagger;
+const configs = require(configFilePath).swagger;
 
 let count = 0;
 
