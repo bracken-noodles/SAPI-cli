@@ -8,7 +8,20 @@
   "bin": {
     "cli": "bin/cli.js"
   },
+  "scripts": {
+    "start": "babel -w ./src --out-dir ./bin  --extensions '.js,.ts,.json'"
+  },
   "dependencies": {
-    "ajv": "^6.8.1"
+    "ajv": "^6.8.1",
+    "typing": "^0.1.9"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.2.3",
+    "@babel/core": "^7.2.2",
+    "@babel/plugin-proposal-class-properties": "^7.3.0",
+    "@babel/plugin-proposal-object-rest-spread": "^7.3.2",
+    "@babel/preset-env": "^7.3.1",
+    "@babel/preset-typescript": "^7.1.0",
+    "@types/ajv-errors": "^1.0.2"
   }
 }
