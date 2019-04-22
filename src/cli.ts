@@ -126,10 +126,10 @@ function getCode(
   data: any
 ) {
   return `
-// ${type} ${description || ""}
+// ${type} ${(description || "").replace(/\n/, " ")}
 export const ${variableName} = (params) => send(${JSON.stringify(
     data
-  )},params)`;
+  )},params);`;
 }
 
 const isProjectPath = (path: string) => path.startsWith(projectPrefix);

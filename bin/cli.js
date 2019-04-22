@@ -92,7 +92,7 @@ function parser(config) {
 }
 
 function getCode(type, description, variableName, data) {
-  return "\n// ".concat(type, " ").concat(description || "", "\nexport const ").concat(variableName, " = (params) => send(").concat(JSON.stringify(data), ",params)");
+  return "\n// ".concat(type, " ").concat((description || "").replace(/\n/, " "), "\nexport const ").concat(variableName, " = (params) => send(").concat(JSON.stringify(data), ",params);");
 }
 
 var isProjectPath = function isProjectPath(path) {
