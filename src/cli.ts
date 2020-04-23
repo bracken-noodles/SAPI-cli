@@ -21,7 +21,7 @@ let fileStr = `/*
  * Go to README.md#swagger-api for more information
  */
 
-import send from "@dc/request"
+import send from "@bracken/dc-request"
 `;
 
 const configFilePath = path.resolve(projectRoot, "./ops.config.js");
@@ -43,7 +43,7 @@ if (fs.existsSync(configFilePath)) {
     let count = 0;
 
     configs.forEach((config: ProxyItem) => {
-      parser(config).then(_ => {
+      parser(config).then((_) => {
         count += 1;
         if (count === configs.length) {
           fs.writeFileSync(swagger.dist, fileStr, "utf8");
@@ -61,13 +61,13 @@ if (fs.existsSync(configFilePath)) {
 
 function parser(config: ProxyItem) {
   return new Promise((resolve, reject) => {
-    http.get(config.swaggerJSON, function(res) {
+    http.get(config.swaggerJSON, function (res) {
       res.setEncoding("utf8");
 
       let swaggerJSONStr = "";
-      res.on("data", str => (swaggerJSONStr += str));
+      res.on("data", (str) => (swaggerJSONStr += str));
 
-      res.on("end", function() {
+      res.on("end", function () {
         const infoObj = JSON.parse(swaggerJSONStr);
 
         Object.keys(infoObj.paths).forEach((path: string) => {
@@ -80,7 +80,7 @@ function parser(config: ProxyItem) {
               type,
               pathWithPrefix,
               query,
-              body
+              body,
             ];
 
             const currentRequestObject = infoObj.paths[path][type];
@@ -92,7 +92,7 @@ function parser(config: ProxyItem) {
                 if (param.schema && param.schema.$ref) {
                   const name = param.schema.$ref.replace("#/definitions/", "");
                   Object.keys(infoObj.definitions[name].properties).forEach(
-                    property => {
+                    (property) => {
                       body[property] =
                         infoObj.definitions[name].properties[property].type;
                     }
@@ -176,7 +176,7 @@ function generateRequestIdFromPath(
     }
   });
 
-  pathQueue.filter(path => !!path);
+  pathQueue.filter((path) => !!path);
 
   mainQueue = mainQueue.concat(pathQueue);
 
@@ -201,6 +201,6 @@ function generateRequestIdFromPath(
 function toBigCamel(str: string | HttpRequestMethod) {
   return (
     str.charAt(0).toUpperCase() +
-    str.slice(1).replace(/-\w/g, match => match.charAt(1).toUpperCase())
+    str.slice(1).replace(/-\w/g, (match) => match.charAt(1).toUpperCase())
   );
 }
